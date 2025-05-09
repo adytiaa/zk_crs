@@ -1,0 +1,8 @@
+// zk_circuits/mean_variance.zok
+
+def main(field x, field lower_bound, field upper_bound, field claimed_mean, field claimed_variance) -> bool:
+    assert(x >= lower_bound)
+    assert(x <= upper_bound)
+    assert(claimed_mean >= 0)
+    assert(claimed_variance >= 0)
+    return true
