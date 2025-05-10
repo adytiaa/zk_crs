@@ -1,6 +1,5 @@
-# ## Privacy-Preserving Decentralized Clinical Research Framework on Solana 
+# Privacy-Preserving Decentralized Clinical Research Framework 
 
-#  privacy-preserving decentralised clinical research framework
 
 **Key Components:**
 
@@ -49,6 +48,10 @@ Citations:
 ![alt text](test_crs.png "ZK_CRF")
 [source: https://www.medrxiv.org/content/10.1101/2024.06.12.24308813v1.full.pdf]
 
+![alt text](crf_arch.png "Architecture")
+[source: https://www.medrxiv.org/content/10.1101/2024.06.12.24308813v1.full.pdf]
+
+
 +-----------------------------------------------------------------------------------+
 |                        Privacy-Preserving Decentralized Clinical Research         |
 |                                   (Solana-based)                                  |
@@ -86,5 +89,51 @@ Citations:
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
 
++---------------------------------------------------------------------------+
+[ Hospital/Clinic ]        [ Research Center ]         [ Data Partner ]
+        |                         |                          |
+        | (Local Data Storage)    | (Local Data Storage)     |
+        +-----------+-------------+-------------+------------+
+                    |                           |
+                    v                           v
+    [ Federated Learning Clients (Local Model Training) ]
+                    |                           |
+                    v                           v
+    [ Model Updates (Encrypted, ZK-Proof Attached) ]
+                    |
+                    v
+[ Solana Blockchain (Smart Contracts, Access Control, ZK Verification) ]
+                    |
+                    v
+[ Authorized Researchers/Regulators (Access Encrypted/Aggregated Results) ]
++---------------------------------------------------------------------------+
 
+Smart contract methods
+
+Patient Smart Contract
+
+    addPatient: Registers a patient for the study and sets access permissions
+
+    editPermissions: Changes a patient’s access permissions
+
+    getPeople: Gets the set of patients registered for the study
+
+Researcher Smart Contract
+
+    addQuery: Submits a new query to the blockchain
+
+    addQueryResult: Places a hash of a query result on the blockchain
+
+    getQueries: Retrieves waiting queries from the blockchain
+
+    getUnsolvedCount: Retrieves the number of waiting queries from the blockchain
+
+
+Data Set sources: https://ncri1.partners.org/ProACT/
+
+The key repos for development of agents and blockchain is 
+
+https://github.com/LeoYML/clinical-agent
+
+https://github.com/ictashik/BlockChain_ClinicalTrial
 
