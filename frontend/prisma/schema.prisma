@@ -1,0 +1,100 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Or your chosen DB
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DOCTOR
+  PATIENT
+  RESEARCHER
+  THIRD_PARTY // Hospital Admin, Insurance etc.
+}
+
+// Represents users of the application
+model User {
+  id            String @id @default(cuid())
+  walletAddress String @unique // Solana wallet address is the core identifier
+  role          Role
+  name          String? // Optional details stored off-chain
+  email         String? @unique // Optional, potentially encrypted
+  contact       String? // Optional, potentially encrypted
+  createdAt     DateTime @default(now())
+
+  // Relations
+  ownedRecords     MedicalRecord[] @relation("OwnedRecords") // Records owned by this user
+  accessRequests   AccessRequest[] @relation("RequesterRequests") // Requests made by this user
+  grantedRequests  AccessRequest[] @relation("GranterRequests") // Requests managed (granted/rejected) by this user (as owner)
+  accessGrants     AccessGrant[]   @relation("UserGrants") // Records this user has been granted access to
+}
+
+// Metadata about an encrypted medical record stored off-chain
+model MedicalRecord {
+  id        String   @id @default(cuid())
+  cid       String   @unique // Content Identifier (from IPFS/Arweave/ShadowDrive) - Links to Solana RecordMetadata PDA
+  ownerId   String   // Link to the User who owns this record
+  owner     User     @relation("OwnedRecords", fields: [ownerId], references: [id])
+
+  fileName            String?  // Original filename for user display
+  encryptedDataHash   String   // Hash of the encrypted data stored off-chain (matches Solana record)
+  encryptionPubKey    String?  // Optional: Public key used for initial encryption if asymmetric
+  uploadedAt          DateTime @default(now())
+  solanaCreatedAt     DateTime? // Timestamp from Solana event/account
+
+  // Relations
+  accessRequests AccessRequest[] @relation("RecordRequests") // Access requests related to this record
+  accessGrants   AccessGrant[]   @relation("RecordGrants") // Access grants related to this record
+
+  @@index([ownerId])
+}
+
+// Represents a request from one user to access another user's medical record
+model AccessRequest {
+  id              String   @id @default(cuid())
+  medicalRecordId String   // Which record is being requested
+  medicalRecord   MedicalRecord @relation("RecordRequests", fields: [medicalRecordId], references: [id])
+
+  requesterId     String   // Who is requesting access
+  requester       User     @relation("RequesterRequests", fields: [requesterId], references: [id])
+
+  granterId       String   // Who owns the record (denormalized for easier querying)
+  granter         User     @relation("GranterRequests", fields: [granterId], references: [id])
+
+  status          AccessStatus @default(PENDING) // PENDING, APPROVED, REJECTED
+  requestMessage  String?  // Optional message from requester
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt // Tracks when status changed
+
+  @@index([medicalRecordId])
+  @@index([requesterId])
+  @@index([granterId])
+}
+
+// Tracks active access grants (mirrors Solana state for faster querying)
+// This is populated when an AccessRequest is APPROVED and a grant_access transaction succeeds on Solana
+model AccessGrant {
+  id                String   @id @default(cuid())
+  medicalRecordId   String   // Which record access is granted to
+  medicalRecord     MedicalRecord @relation("RecordGrants", fields: [medicalRecordId], references: [id])
+
+  requesterId       String   // Who was granted access
+  requester         User     @relation("UserGrants", fields: [requesterId], references: [id])
+
+  solanaReEncKey    String   // The re-encrypted key stored on Solana (needed for requester decryption)
+  grantedAt         DateTime // Timestamp from Solana event/account
+
+  @@unique([medicalRecordId, requesterId]) // Ensures only one active grant per record/requester pair
+  @@index([requesterId])
+}
+
+enum AccessStatus {
+  PENDING
+  APPROVED // Request approved, corresponding Solana grant transaction should exist/be created
+  REJECTED // Request denied
+}
