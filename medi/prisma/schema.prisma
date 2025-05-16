@@ -1,0 +1,124 @@
+// /medi/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Or your chosen DB (mysql, sqlite)
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  RESEARCHER
+  ADMIN // For system administration
+  // THIRD_PARTY // e.g., Insurance, Pharmacy - if needed later
+}
+
+model User {
+  id            String   @id @default(cuid())
+  walletAddress String   @unique // Solana wallet address
+  role          Role     // User's primary role in the system
+  name          String?  // Optional: Full name
+  email         String?  @unique // Optional: Email for notifications
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Records this user owns (as a PATIENT)
+  ownedMedicalRecords MedicalRecord[] @relation("OwnedRecords")
+
+  // Access requests this user has made
+  initiatedAccessRequests AccessRequest[] @relation("RequesterRequests")
+
+  // Access requests made for this user's records (if they are a PATIENT)
+  receivedAccessRequests AccessRequest[] @relation("GranterRequests")
+
+  // Access grants given to this user by others
+  activeGrantsReceived AccessGrant[]   @relation("GrantedToUser")
+}
+
+model MedicalRecord {
+  id                  String   @id @default(cuid())
+  ownerId             String   // Foreign key to User table (Patient)
+  owner               User     @relation("OwnedRecords", fields: [ownerId], references: [id])
+  recordPda           String   @unique // The Solana PDA address for this record's metadata (on-chain)
+  cid                 String   // Content Identifier (from IPFS/Arweave/ShadowDrive)
+  fileName            String   // User-friendly file name
+  encryptedDataHash   String   // Hash of the encrypted data (matches on-chain)
+  // Store the symmetric key encrypted with the owner's public key (retrieved from chain or during creation)
+  // This allows the owner to decrypt their own files without needing another grant.
+  ownerEncryptedSymmetricKey String
+
+  offChainCreatedAt   DateTime @default(now()) // When record was created in this DB
+  onChainCreatedAt    DateTime? // Timestamp from Solana event/account
+  isOffChainActive    Boolean  @default(true) // For soft deletes in the DB if needed
+
+  accessRequests AccessRequest[] @relation("RecordRequests")
+  accessGrants   AccessGrant[]   @relation("RecordGrants")
+
+  @@index([ownerId])
+  @@index([cid])
+}
+
+enum AccessRequestStatus {
+  PENDING   // Request initiated by a requester
+  APPROVED  // Owner approved, corresponding Solana AccessGrant should exist/be created
+  REJECTED  // Owner rejected
+  CANCELLED // Requester cancelled before approval
+}
+
+// Tracks the request for access before it's approved/rejected and put on-chain
+model AccessRequest {
+  id                String   @id @default(cuid())
+  medicalRecordId   String   // Which MedicalRecord (off-chain ID) is being requested
+  medicalRecord     MedicalRecord @relation("RecordRequests", fields: [medicalRecordId], references: [id])
+
+  requesterId       String   // User ID of the requester
+  requester         User     @relation("RequesterRequests", fields: [requesterId], references: [id])
+
+  // Denormalized from medicalRecord.ownerId for easier querying of pending requests by a patient
+  granterId         String
+  granter           User     @relation("GranterRequests", fields: [granterId], references: [id])
+
+  status            AccessRequestStatus @default(PENDING)
+  requestMessage    String?  // Optional message from requester (e.g., purpose of access)
+  rejectionReason   String?  // Optional reason if rejected
+  requestedAt       DateTime @default(now())
+  lastStatusUpdate  DateTime @updatedAt
+
+  // Link to the on-chain AccessGrant if this request gets approved
+  accessGrantId     String?       @unique // Foreign key to AccessGrant table
+  accessGrant       AccessGrant?  @relation(fields: [accessGrantId], references: [id])
+
+  @@index([medicalRecordId])
+  @@index([requesterId])
+  @@index([granterId])
+  @@index([status])
+}
+
+// Mirrors the on-chain AccessGrant PDA state for faster querying and richer off-chain metadata
+model AccessGrant {
+  id                String   @id @default(cuid())
+  grantPda          String   @unique // The Solana PDA address for this grant (on-chain)
+  medicalRecordId   String   // Link to our off-chain MedicalRecord
+  medicalRecord     MedicalRecord @relation("RecordGrants", fields: [medicalRecordId], references: [id])
+
+  requesterId       String   // User ID of the user granted access
+  requester         User     @relation("GrantedToUser", fields: [requesterId], references: [id])
+
+  // The symmetric key for the file, re-encrypted by the owner for this specific requester
+  // This is fetched from the on-chain AccessGrant account.
+  reEncryptedSymmetricKey String
+
+  offChainCreatedAt DateTime @default(now())
+  onChainGrantedAt  DateTime? // Timestamp from Solana event/account
+  isOffChainActive  Boolean  @default(true) // Mirrors on-chain active status, can be updated by event listener
+
+  // Optional: if purpose/expiry are added to on-chain grant
+  // purpose           String?
+  // expiresAt         DateTime?
+
+  // The AccessRequest that led to this grant - using the inverse of the relation defined in AccessRequest
+  sourceRequest AccessRequest?
+}

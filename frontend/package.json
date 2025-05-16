@@ -1,0 +1,32 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "react-scripts build && firebase deploy",
+    "dev": "next dev --turbopack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/wallet-adapter-base": "alpha: 0.9.23-alpha.3",
+    "bs58": "^5.0.0",
+    "next": "^15.2.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.16.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^9.1.1",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.4",
+    "tailwindcss": "^3.3.5",
+    "axios": "^1.6.2"
+  }
+}
