@@ -49,7 +49,8 @@ Citations:
 [source: https://www.medrxiv.org/content/10.1101/2024.06.12.24308813v1.full.pdf]
 
 ![alt text](crf_arch.png "Architecture")
-[source: https://www.medrxiv.org/content/10.1101/2024.06.12.24308813v1.full.pdf]
+![alt text](FL_solana.png "Architecture_good")
+
 
 
 +-----------------------------------------------------------------------------------+
@@ -131,7 +132,7 @@ Researcher Smart Contract
 
 Data Set sources: https://ncri1.partners.org/ProACT/
 
-The key repos for development of agents and blockchain is 
+Key repos which are good start for development of agents and blockchain: 
 
 https://github.com/LeoYML/clinical-agent
 
