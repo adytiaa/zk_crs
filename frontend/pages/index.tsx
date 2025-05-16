@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useAuth } from '../hooks/useAuth'; // Your custom hook for AuthContext
+import { useAuth } from '@/lib/apiClient'; // Your custom hook for AuthContext
 import { useRouter } from 'next/router';
 
 const LoginPage: React.FC = () => {

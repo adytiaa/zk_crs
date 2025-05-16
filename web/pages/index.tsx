@@ -2,9 +2,8 @@
 import React, { useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useAuth } from '../hooks/useAuth'; // Your custom hook for AuthContext
 import { useRouter } from 'next/router';
-
+import { useAuth } from '@/lib/api'; // Your custom hook for AuthContext
 const LoginPage: React.FC = () => {
   const { connected, publicKey } = useWallet();
   const { login, loading, isAuthenticated, user } = useAuth();
@@ -53,4 +52,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+  export default LoginPage;

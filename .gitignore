@@ -30,4 +30,6 @@ node_modules
 *./firebase-debug.log*
 *./firebase-debug.*.log*
 *./firebase-debug.*.log
-medi/*
+.env
+medi/.env
+medi/anchor/target/idl/medicrypt.json
