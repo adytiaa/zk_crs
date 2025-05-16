@@ -1,4 +1,4 @@
-# Privacy-Preserving Decentralized Clinical Research Framework 
+# Decentralised Clinical Research Framework 
 
 
 **Key Components:**
