@@ -1,4 +1,6 @@
-# Decentralised Clinical Research Framework 
+# DEZI NETWORK
+
+## Decentralised Clinical Research Framework 
 
 
 **Key Components:**
@@ -137,4 +139,58 @@ Key repos which are good start for development of agents and blockchain:
 https://github.com/LeoYML/clinical-agent
 
 https://github.com/ictashik/BlockChain_ClinicalTrial
+
+
+## Ideas for Using NEAR Blockchain Shade Agents in Health Data Research
+
+Shade Agents on NEAR are decentralized, autonomous AI agents that leverage trusted execution environments (TEEs) and decentralized key management to securely interact with multiple blockchains and off-chain data sources, while preserving privacy and eliminating single points of failure. Here are several ways these agents could be applied in health data research:
+
+---
+
+1. Secure, Autonomous Health Data Custody and Sharing
+- Shade Agents can act as non-custodial controllers of sensitive health data, ensuring only authorized, privacy-preserving access and sharing between research stakeholders (e.g., hospitals, labs, researchers)[1][2][5].
+- They can autonomously enforce consent, audit access, and log all data transactions verifiably on-chain, reducing risks of data breaches and unauthorized use.
+
+2. Cross-Institutional Data Collaboration
+- By leveraging Shade Agents’ multichain and cross-platform capabilities, health data from different sources (e.g., hospital EHRs, genomics labs, wearable devices) can be securely aggregated and analyzed without centralized intermediaries[1][2][5][7].
+- Agents can autonomously orchestrate data queries, federated learning, or distributed analytics, while maintaining compliance with privacy regulations.
+
+3. Automated Research Protocol Execution
+- Researchers can deploy Shade Agents to autonomously execute complex research workflows, such as recruiting participants, distributing incentives, collecting data, and performing on-chain analysis, all with verifiable audit trails[1][2][6][8].
+- Agents can interact with off-chain AI models, APIs, or computation resources to process health data in real time, then record results or trigger further actions on-chain.
+
+4. Privacy-Preserving Data Monetization and Incentivization
+- Shade Agents can manage decentralized marketplaces where individuals contribute anonymized health data in exchange for rewards, ensuring that data usage complies with user consent and is tracked transparently[1][2][5][7].
+- Smart contracts can automate payments, royalties, or research incentives based on data usage or research milestones.
+
+5. Decentralized Governance and Compliance
+- Use Shade Agents to facilitate decentralized governance of health data repositories, allowing token holders or DAOs to vote on data access policies, research priorities, or funding allocations[6][7].
+- Agents can autonomously enforce KYC/KYB or compliance checks, reducing manual overhead and increasing trust among participants.
+
+---
+
+## Example Use Cases
+
+| Use Case                                   | How Shade Agents Help                                    |
+|---------------------------------------------|----------------------------------------------------------|
+| Secure health data sharing                  | Enforce access, consent, and privacy on-chain            |
+| Multi-institutional research collaboration  | Aggregate/analyze data across silos, preserve privacy    |
+| Automated clinical trial management         | Recruit, consent, and reward participants autonomously   |
+| Privacy-preserving data marketplaces        | Enable data monetization with strong privacy guarantees  |
+| DAO-driven health research funding          | Automate governance, compliance, and fund distribution   |
+
+---
+
+### Why Shade Agents Are a Fit for Health Data Research
+
+- Privacy & Security: TEEs and decentralized key management protect sensitive health data and cryptographic keys, even if some nodes fail or are compromised[1][2][5][8].
+- Autonomy & Verifiability: Agents operate without centralized oversight, actions are verifiable, and audit trails are on-chain[1][2][5][7].
+- Cross-Chain & Off-Chain Integration: Shade Agents can interact with multiple blockchains and external data/APIs, enabling rich, real-world applications
+
+
+ Trustless Collaboration: Researchers and institutions can collaborate without needing to trust a central party, reducing barriers to data sharing and innovation[1][2][5][7].
+
+---
+
+In summary: NEAR Shade Agents could transform health data research by enabling secure, privacy-preserving, and autonomous data management, collaboration, and analysis—unlocking new models for decentralized, user-owned health innovation
 
