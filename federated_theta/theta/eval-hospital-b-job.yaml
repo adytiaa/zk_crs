@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fedml-eval-hospital-b
+spec:
+  template:
+    spec:
+      containers:
+        - name: eval-client
+          image: <YOUR_REGISTRY>/fedml-client:latest
+          command: ["python", "client/eval_client.py"]
+          args: ["--client_id", "hospital_b", "--data", "/mnt/data/hospital_b_test.csv", "--server_addr", "<SERVER_PUBLIC_IP>:8080"]
+          volumeMounts:
+            - name: hospital-b-test
+              mountPath: /mnt/data
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+      volumes:
+        - name: hospital-b-test
+          hostPath:
+            path: /local/hospital_b_test
+      restartPolicy: Never

@@ -9,7 +9,7 @@ This project demonstrates decentralized federated learning with privacy guarante
 
 ## Flow
 1. Local model training at hospitals.
-2. ZK proof of correct execution.
+2. ZK proofs for access, training of models, and correct execution.
 3. Proof verification on Solana.
 4. DAO rewards participants.
 5. Global model aggregation.

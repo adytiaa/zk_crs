@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fedml-server
+spec:
+  template:
+    spec:
+      containers:
+        - name: server
+          image: <YOUR_REGISTRY>/fedml-server:latest
+          args: ["--port", "8080", "--config", "server/server_config.yaml"]
+          ports:
+            - containerPort: 8080
+      restartPolicy: Never

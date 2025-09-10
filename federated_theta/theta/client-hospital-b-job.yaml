@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fedml-client-hospital-b
+spec:
+  template:
+    spec:
+      containers:
+        - name: client
+          image: <YOUR_REGISTRY>/fedml-client:latest
+          args: ["--client_id", "hospital_b", "--data", "/mnt/data/hospital_b_notes.csv", "--server_addr", "<SERVER_PUBLIC_IP>:8080", "--config", "client/client_config.yaml"]
+          volumeMounts:
+            - name: hospital-b-data
+              mountPath: /mnt/data
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+      volumes:
+        - name: hospital-b-data
+          hostPath:
+            path: /local/hospital_b_data
+      restartPolicy: Never

@@ -1,0 +1,23 @@
+fedml_version: "0.8"
+
+training:
+  rounds: 5
+  epochs: 1
+  batch_size: 2
+
+strategy:
+  type: "fedavg"
+  secure_aggregation: true
+  compression: none
+
+privacy:
+  differential_privacy:
+    enabled: true
+    epsilon: 5.0
+    delta: 1e-5
+    noise_multiplier: 1.1
+    max_grad_norm: 1.0
+
+logging:
+  level: INFO
+  save_model_every_round: true

@@ -1,0 +1,24 @@
+fedml_version: "0.8"
+
+client:
+  id: auto
+  server_addr: auto
+  data_path: auto
+
+training:
+  optimizer: adam
+  lr: 5e-5
+  epochs: 1
+  batch_size: 2
+
+privacy:
+  differential_privacy:
+    enabled: true
+    epsilon: 5.0
+    delta: 1e-5
+    noise_multiplier: 1.1
+    max_grad_norm: 1.0
+
+communication:
+  tls: true
+  compression: none
