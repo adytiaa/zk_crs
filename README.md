@@ -1,7 +1,28 @@
+# Federated Theta Agent (FedML Clinical Simulation)
+
+This project demonstrates how to build a **federated learning agent** for decentralized clinical research using **FedML**. It simulates a small synthetic clinical dataset, distributes it across clients, and runs **federated training** using FedML’s client/server orchestration. The design mimics how this would run on a decentralized infrastructure like **Theta Cloud + Edge**.
+
+---
+
+## ✨ Key Features
+- **Synthetic Clinical Dataset**
+  - Features: age, systolic/diastolic blood pressure, glucose, comorbidity, lab marker.
+  - Binary classification task (risk prediction).
+- **Non-IID Client Data Split**
+  - Data is distributed across clients to simulate real-world hospital settings.
+- **Federated Training via FedML**
+  - Uses FedML’s `FedMLRunner` to coordinate server + clients.
+  - Clients train locally with a simple MLP classifier.
+  - Server aggregates updates using FedAvg.
+- **Local Test Launcher**
+  - Spawns one server + multiple client processes on the same machine for quick testing.
+
+---
+
+
 # DEZI NETWORK
 
 ## Decentralised Clinical Research Framework 
-
 
 **Key Components:**
 
